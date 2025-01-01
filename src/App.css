@@ -239,3 +239,38 @@ label {
   color: red;
   font-weight: bold;
 }
+
+/* Table Styling */
+.malformatted-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #ffe6e6; /* Light red background for malformatted table */
+  border: 1px solid #ff0000; /* Red border */
+}
+
+.malformatted-table th,
+.malformatted-table td {
+  border: 1px solid #ff9999; /* Light red border for cells */
+  padding: 10px;
+  text-align: left;
+}
+
+.malformatted-table th {
+  background-color: #ffcccc; /* Slightly darker red for header */
+  font-weight: bold;
+  color: #660000; /* Dark red text */
+}
+
+.malformatted-row td {
+  color: #990000; /* Highlight text in malformatted rows */
+}
+
+.malformatted-row td:last-child {
+  font-weight: bold;
+  color: #ff0000; /* Bright red for error column */
+}
+
+.malformatted-row:hover {
+  background-color: #ffd6d6; /* Light hover effect */
+}

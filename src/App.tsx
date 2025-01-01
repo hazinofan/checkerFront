@@ -4,11 +4,13 @@ import "./App.css";
 interface EmailResult {
   email: string;
   status: string;
+  error?: string; // Optional for malformatted rows
 }
 
 interface Results {
   success: EmailResult[];
   failed: EmailResult[];
+  malformatted: EmailResult[]; // Add malformatted rows
 }
 
 const App: React.FC = () => {
@@ -43,7 +45,7 @@ const App: React.FC = () => {
     try {
       setLoading(true);
       setResults(null);
-      const response = await fetch("https://checkerbackend.onrender.com/api/checker", {
+      const response = await fetch("http://127.0.0.1:5000/api/checker", {
         method: "POST",
         body: formData,
       });
@@ -68,7 +70,6 @@ const App: React.FC = () => {
       <header className="header">
         <h1>SMTP Checker</h1>
       </header>
-      <p></p>
       <main className="main">
         <form onSubmit={handleSubmit} className="form">
           <div className="textInputWrapper">
@@ -93,20 +94,6 @@ const App: React.FC = () => {
           </div>
           <div className="form-group">
             <label className="button">
-              <svg
-                className="w-6 h-6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                ></path>
-              </svg>
               <span className="text">Upload File</span>
               <input
                 type="file"
@@ -124,44 +111,66 @@ const App: React.FC = () => {
         <section className="results">
           <h2>Results:</h2>
           {results ? (
-            <table className="results-table">
-              <thead>
-                <tr>
-                  <th>Success Email</th>
-                  <th>Status</th>
-                  <th>Failed Email</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from(
-                  {
-                    length: Math.max(
-                      results.success.length,
-                      results.failed.length
-                    ),
-                  },
-                  (_, index) => (
-                    <tr key={index}>
-                      <td>{results.success[index]?.email || ""}</td>
-                      <td className="success-status">
-                        {results.success[index]?.status || ""}
-                      </td>
-                      <td>{results.failed[index]?.email || ""}</td>
-                      <td className="failed-status">
-                        {results.failed[index]?.status || ""}
-                      </td>
+            <>
+              <table className="results-table">
+                <thead>
+                  <tr>
+                    <th>Success Email</th>
+                    <th>Status</th>
+                    <th>Failed Email</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from(
+                    {
+                      length: Math.max(
+                        results.success.length,
+                        results.failed.length
+                      ),
+                    },
+                    (_, index) => (
+                      <tr key={index}>
+                        <td>{results.success[index]?.email || ""}</td>
+                        <td className="success-status">
+                          {results.success[index]?.status || ""}
+                        </td>
+                        <td>{results.failed[index]?.email || ""}</td>
+                        <td className="failed-status">
+                          {results.failed[index]?.status || ""}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+              <h3>Malformatted Rows:</h3>
+              <table className="malformatted-table">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.malformatted.map((entry, index) => (
+                    <tr key={index} className="malformatted-row">
+                      <td>{entry.email}</td>
+                      <td>{entry.status}</td>
+                      <td>{entry.error || "Unknown error"}</td>
                     </tr>
-                  )
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </>
           ) : (
             <pre className="results-box">
               {loading ? "Processing..." : "No results yet."}
             </pre>
           )}
         </section>
+        <h2> For @houssine07 </h2>
       </main>
     </div>
   );
