@@ -45,7 +45,7 @@ const App: React.FC = () => {
     try {
       setLoading(true);
       setResults(null);
-      const response = await fetch("http://127.0.0.1:5000/api/checker", {
+      const response = await fetch("https://checkerbackend.onrender.com/api/checker", {
         method: "POST",
         body: formData,
       });
